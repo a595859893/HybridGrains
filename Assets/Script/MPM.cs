@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Mathematics.math;
+using Unity.Mathematics;
 
 public class GridNode
 {
@@ -15,8 +17,8 @@ public class MaterialPoint
     public float m;
     public Vector3 v;
     public float J;
-    public Matrix4x4 sigma;
-    public Matrix4x4 be;
+    public float3x3 sigma;
+    public float3x3 be;
 }
 
 
@@ -71,7 +73,8 @@ public class Grid
                 GridNode node = GetNodes(gridVec);
 
                 Vector3 w = WeightGard(point, gridVec);
-                node.f += -point.v * point.J * point.sigma * w;
+                // node.f += -point.v * point.J * point.sigma * w;
+
             }
         }
     }
