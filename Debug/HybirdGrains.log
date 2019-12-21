@@ -1,6 +1,33 @@
-﻿  Simulator.cpp
-  main.cpp
-D:\Project\CPP\HybirdGrains\main.cpp(33,1): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(208): message : 参见“fopen”的声明
-  正在生成代码...
+﻿  Grid.cpp
+D:\Project\CPP\HybirdGrains\Grid.cpp(35,23): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+D:\Project\CPP\HybirdGrains\Grid.cpp(75,10): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\Project\CPP\HybirdGrains\Grid.cpp(75,34): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\Project\CPP\HybirdGrains\Grid.cpp(108,10): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\Project\CPP\HybirdGrains\Grid.cpp(108,34): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\Project\CPP\HybirdGrains\Grid.cpp(200,10): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+D:\Project\CPP\HybirdGrains\Grid.cpp(200,34): warning C4244: “初始化”: 从“T”转换到“int”，可能丢失数据
+          with
+          [
+              T=float
+          ]
   HybirdGrains.vcxproj -> D:\Project\CPP\HybirdGrains\Debug\HybirdGrains.exe

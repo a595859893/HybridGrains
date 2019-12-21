@@ -9,10 +9,14 @@ struct Simulator {
 	GLint height;
 	GLint grainsNum;
 	Grain* grains;
+	Grid grid;
+
 	GLfloat* grainsPos;
 	GLfloat* grainsColor;
-	Grid grid;
+
+	GLfloat* gridPos;
+	GLfloat* gridColor;
 };
 
-void InitSimulator(Simulator* sim, GLint width, GLint height, GLint grainNum);
+void InitSimulator(Simulator* sim, GLint grainNum);
 void SimUpdate(Simulator* sim);

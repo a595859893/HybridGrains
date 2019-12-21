@@ -5,7 +5,6 @@
 struct Grain {
 	GLfloat vol, mass, density;
 	glm::vec2 pos, velocity;
-	glm::vec3 color;
 	glm::mat2x2 velocityGard;
 
 	GLfloat lambda, mu;

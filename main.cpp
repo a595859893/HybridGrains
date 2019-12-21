@@ -20,13 +20,15 @@
 #include "Simulator.h"
 #include "Constant.h"
 
-#define WINDOWS_HEIGHT 600
-#define WINDOWS_WIDTH 600
+#define WINDOWS_HEIGHT 800
+#define WINDOWS_WIDTH 800
 
 void Cleanup();
 
 Simulator sim;
-GLuint VaoIdx, VboIdx, ColorIdx, VertexShaderId, FragmentShaderId, ProgramId;
+GLuint VaoIdx, VboIdx, ColorIdx;
+GLuint GridVaoIdx, GridVboIdx, GridColorIdx;
+GLuint VertexShaderId, FragmentShaderId, ProgramId;
 
 char* ReadShader(const char* path) {
 	// 从文件中读取所有字符串的函数
@@ -53,11 +55,11 @@ void InitShaders() {
 	VertexShaderId = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(VertexShaderId, 1, &VertexShader, NULL);
 	glCompileShader(VertexShaderId);
-	
+
 	FragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(FragmentShaderId, 1, &FragmentShader, NULL);
 	glCompileShader(FragmentShaderId);
-	
+
 
 	// 将shader绑定在program上
 	ProgramId = glCreateProgram();
@@ -65,7 +67,7 @@ void InitShaders() {
 	glAttachShader(ProgramId, FragmentShaderId);
 	glLinkProgram(ProgramId);
 	glUseProgram(ProgramId);
-	
+
 	char buf[1024];
 	int len;
 	GLint compileResult = GL_TRUE;
@@ -96,7 +98,7 @@ void InitWindow(int argc, char* argv[]) {
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
 	glutInitWindowSize(WINDOWS_WIDTH, WINDOWS_HEIGHT);
-	glutInitDisplayMode(GLUT_RGBA);
+	glutInitDisplayMode(GLUT_RGB);
 	glutCreateWindow("Hybird Grains");
 }
 
@@ -111,10 +113,12 @@ void Initialize(int argc, char* argv[]) {
 
 	// 背景颜色和关闭窗口的内存释放
 	glClearColor(0, 0, 0, 0);
+	glEnable(GL_PROGRAM_POINT_SIZE);
 	glutCloseFunc(Cleanup);
 }
 
 void InitBuffer() {
+	// 粒子展示Buffer
 	glGenVertexArrays(1, &VaoIdx);
 	glGenBuffers(1, &VboIdx);
 	glGenBuffers(1, &ColorIdx);
@@ -128,6 +132,23 @@ void InitBuffer() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, ColorIdx);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * sim.grainsNum * 3, sim.grainsColor, GL_STREAM_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
+
+	// Grid可视化Buffer
+	glGenVertexArrays(1, &GridVaoIdx);
+	glGenBuffers(1, &GridVboIdx);
+	glGenBuffers(1, &GridColorIdx);
+
+	glBindVertexArray(GridVaoIdx);
+
+	glBindBuffer(GL_ARRAY_BUFFER, GridVboIdx);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * sim.grid.size[0] * sim.grid.size[1] * 6 * GRAINS_DIM, sim.gridPos, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, GRAINS_DIM, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, GridColorIdx);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * sim.grid.size[0] * sim.grid.size[1] * 6 * 3, sim.gridColor, GL_STREAM_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
 
@@ -145,13 +166,26 @@ void RenderFunction(void) {
 
 	// 更新数据
 	SimUpdate(&sim);
-	glBindBuffer(GL_ARRAY_BUFFER, VboIdx);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sim.grainsNum * GRAINS_DIM, sim.grainsPos);
-	glBindBuffer(GL_ARRAY_BUFFER, ColorIdx);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sim.grainsNum * 3, sim.grainsColor);
 
-	// 绘制
-	glDrawArrays(GL_POINTS, 0, sim.grainsNum);
+	// Grid可视化
+	glBindVertexArray(GridVaoIdx);
+	glBindBuffer(GL_ARRAY_BUFFER, GridVboIdx);
+	glBindBuffer(GL_ARRAY_BUFFER, GridColorIdx);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * sim.grid.size[0] * sim.grid.size[1] * 6 * 3, sim.gridColor);
+	glDrawArrays(GL_TRIANGLES, 0, sim.grid.size[0] * sim.grid.size[1] * 6);
+
+	// Grain绘制
+	glBindVertexArray(VaoIdx);
+	glBindBuffer(GL_ARRAY_BUFFER, ColorIdx);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * sim.grainsNum * 3, sim.grainsColor);
+	glBindBuffer(GL_ARRAY_BUFFER, VboIdx);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * sim.grainsNum * GRAINS_DIM, sim.grainsPos);
+	glDrawArrays(GL_POINTS, 0, sim.grainsNum * 3);
+
+	//for (int i = 0; i < sim.grainsNum ; i++) {
+	//	printf("%f %f %f \n", sim.grainsColor[i * 3 + 0], sim.grainsColor[i * 3 + 1], sim.grainsColor[i * 3 + 2]);
+	//}
+
 
 	glutSwapBuffers();
 	glutPostRedisplay();
@@ -185,7 +219,7 @@ int main(int argc, char* argv[])
 {
 	// 初始化窗口和模型相关数据
 	Initialize(argc, argv);
-	InitSimulator(&sim, 2, 2, 10000);
+	InitSimulator(&sim, 100);
 	InitShaders();
 	InitBuffer();
 
