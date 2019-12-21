@@ -32,17 +32,28 @@ void updateGradient(Grain* grain) {
 void applyPlasticity(Grain* grain) {
 	glm::mat2x2 fAll = grain->defElastic + grain->defPlastic;
 	Eigen::Matrix2f defElastic = CoverMat2x2(grain->defElastic);
-	Eigen::JacobiSVD<Eigen::Matrix2f> svd(defElastic);
+	Eigen::JacobiSVD<Eigen::Matrix2f> svd(defElastic, Eigen::ComputeFullU | Eigen::ComputeFullV);
 
-	// TODO 映射关系存疑，原先的uv和这里的vw之间的关系是？
-	// 目前假设V是一样的，U=W
-	grain->svdV = CoverMat2x2(svd.matrixV());
+	// V=V.U=W
+	grain->svdV = CoverMat2x2(svd.matrixV()); 
 	grain->svdW = CoverMat2x2(svd.matrixU());
 	grain->svdE = CoverVec2(svd.singularValues());
-	grain->svdE = glm::clamp(grain->svdE, CRIT_COMPRESS, CRIT_COMPRESS);
+	grain->svdE = glm::clamp(grain->svdE, CRIT_COMPRESS, CRIT_STRETCH);
+	
+	glm::mat2x2 vCopy(grain->svdV), wCopy(grain->svdW);
 
-	grain->defElastic = grain->svdV * glm::transpose(grain->svdW) * fAll;
-	grain->defElastic = grain->svdW * glm::transpose(grain->svdV);
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++)
+			wCopy[i][j] *= grain->svdE[i];
+	}
+
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++)
+			vCopy[i][j] /= grain->svdE[i];
+	}
+
+	grain->defPlastic = vCopy * glm::transpose(grain->svdW) * fAll;
+	grain->defElastic = wCopy * glm::transpose(grain->svdV);
 }
 glm::mat2x2 energyDerivative(Grain* grain) {
 	GLfloat harden = exp(HARDENING * (1 - glm::determinant(grain->defPlastic))),

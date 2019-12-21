@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Constant.cpp" />
+    <ClCompile Include="empty.cpp" />
     <ClCompile Include="Grain.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Simulator.cpp" />

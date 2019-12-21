@@ -7,7 +7,12 @@ glm::mat2x2 CoverMat2x2(Eigen::Matrix2f mat);
 Eigen::Matrix2f CoverMat2x2(glm::mat2x2  mat);
 glm::vec2 CoverVec2(Eigen::Vector2f vec);
 
+GLfloat bspline(GLfloat x);
+GLfloat bsplineSlope(GLfloat x);
+
+static const glm::vec2 GRAVITY(0, -9.8);
 static const GLint GRAINS_DIM = 2;
+static const GLint BSPLINE_RADIUS = 2;
 
 static const GLfloat
 PARTICLE_DIAM = .005f,		//Diameter of each particle; smaller = higher resolution
@@ -24,4 +29,5 @@ MAX_IMPLICIT_ITERS = 30,	//Maximum iterations for the conjugate residual
 MAX_IMPLICIT_ERR = 1e4f,		//Maximum allowed error for conjugate residual
 MIN_IMPLICIT_ERR = 1e-4f,	//Minimum allowed error for conjugate residual
 STICKY = .9f,				//Collision stickiness (lower = stickier)
-TIMESTEP = 0.0001f;
+TIMESTEP = 0.0001f,
+BSPLINE_EPSILON = 1e-4f;

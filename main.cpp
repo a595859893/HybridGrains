@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
 {
 	// 初始化窗口和模型相关数据
 	Initialize(argc, argv);
-	InitSimulator(&sim, WINDOWS_WIDTH, WINDOWS_HEIGHT, 10000);
+	InitSimulator(&sim, 2, 2, 10000);
 	InitShaders();
 	InitBuffer();
 

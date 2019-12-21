@@ -11,7 +11,7 @@ struct Simulator {
 	Grain* grains;
 	GLfloat* grainsPos;
 	GLfloat* grainsColor;
-	Grid* grid;
+	Grid grid;
 };
 
 void InitSimulator(Simulator* sim, GLint width, GLint height, GLint grainNum);
