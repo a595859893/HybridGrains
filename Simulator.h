@@ -1,7 +1,6 @@
 #pragma once
 #include <gl/glew.h>
 
-#include "Grain.h"
 #include "Grid.h"
 
 struct Simulator {

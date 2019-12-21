@@ -18,16 +18,15 @@ void InitSimulator(Simulator* sim, GLint grainsNum) {
 
 
 	for (i = 0; i < grainsNum; i++) {
-		glm::vec2 randPos = glm::clamp(glm::gaussRand(glm::vec2(0, 0), glm::vec2(0.1, 0.1)), -1.0f, 1.0f);
+		glm::vec2 randPos = glm::clamp(glm::gaussRand(glm::vec2(0, 0), glm::vec2(0.3, 0.3)), -1.0f, 1.0f);
 		glm::vec2 randVel = glm::gaussRand(glm::vec2(0, 0), glm::vec2(1, 1));
 		//glm::vec2 randVel = glm::vec2(0, 1);
-		InitGrain(sim->grains + i, randPos, randVel, 1, MU, LAMBDA);
+		InitGrain(sim->grains + i, randPos, randVel, 1, 0.01f, MU);
 	}
 
 	InitGrid(&sim->grid, sim->grains, grainsNum,
 		glm::vec2(-1, -1), glm::vec2(2, 2), glm::vec2(256, 256));
-	InitMass(&sim->grid);
-	CalculateVolumes(&sim->grid);
+	RasterizeMassAndMomentum(&sim->grid);
 
 	int GridNum = sim->grid.size[0] * sim->grid.size[1];
 	sim->gridPos = (GLfloat*)malloc(sizeof(GLfloat) * GridNum * 6 * GRAINS_DIM);
@@ -70,22 +69,28 @@ void SimUpdate(Simulator* sim) {
 	int i, j, k, idx;
 	Grain* cur;
 
-	InitMass(&sim->grid);
-	InitVelocity(&sim->grid);
-	ExplicitVelocities(&sim->grid, GRAVITY);
-	UpdateVelocites(&sim->grid);
+	//MPM Frist Phrase
+	RasterizeMassAndMomentum(&sim->grid);
+	ComputeStressAtPoint(&sim->grid);
+	ComputeForceOnGrid(&sim->grid, GRAVITY);
+	UpdateMomentumOnGrid(&sim->grid);
+
+	//MPM Second Phrase
+	LumpedMassVelocityUpdateOnGrid(&sim->grid);
+	ComputeVelocityGradientAtPoint(&sim->grid);
+	ElasticPredictionAtPoint(&sim->grid);
+	PlasticCorrectionAtPoint(&sim->grid);
+	UpdateVelocitesAtPoint(&sim->grid);
+	UpdatePositionsAtPoint(&sim->grid);
 
 	for (i = 0; i < sim->grainsNum; i++) {
 		// 更新状态
 		cur = sim->grains + i;
-		updatePos(cur);
-		updateGradient(cur);
-		applyPlasticity(cur);
 
 		// 更新绘制位置和颜色
 		for (j = 0; j < GRAINS_DIM; j++)
 			sim->grainsPos[i * GRAINS_DIM + j] = sim->grains[i].pos[j];
-		sim->grainsColor[i * 3 + 0] = sim->grains[i].density / 10000.0f;
+		sim->grainsColor[i * 3 + 0] = 0.5f;
 		sim->grainsColor[i * 3 + 1] = 1;
 		sim->grainsColor[i * 3 + 2] = glm::length(sim->grains[i].velocity) / 10.0f;
 	}

@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Grain.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -35,9 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Grain.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Grid.h">
       <Filter>头文件</Filter>
     </ClInclude>

@@ -1,15 +1,10 @@
 #pragma once
 #include <gl/glew.h>
 #include <glm/glm.hpp>
-#include <Eigen/Dense>
 
 #define MATRIX_EPSILON 1e-6
 
-glm::mat2x2 CoverMat2x2(Eigen::Matrix2f mat);
-Eigen::Matrix2f CoverMat2x2(glm::mat2x2  mat);
-glm::vec2 CoverVec2(Eigen::Vector2f vec);
 void svd(glm::mat2x2 in, glm::mat2x2* outw, glm::vec2* oute, glm::mat2x2* outv);
-
 GLfloat bspline(GLfloat x);
 GLfloat bsplineSlope(GLfloat x);
 
@@ -33,7 +28,10 @@ MAX_IMPLICIT_ERR = 1e3f,		//Maximum allowed error for conjugate residual
 MIN_IMPLICIT_ERR = 1e-3f,	//Minimum allowed error for conjugate residual
 STICKY = .5f,				//Collision stickiness (lower = stickier)
 TIMESTEP = 1e-3f,
-BSPLINE_EPSILON = 1e-3f;
+BSPLINE_EPSILON = 1e-3f,
+KAPPA = 0.01f,
+ALPHA = 0.2f,
+BETA = 0.8;
 
 static const GLfloat
 LAMBDA = YOUNGS_MODULUS * POISSONS_RATIO / ((1 + POISSONS_RATIO) * (1 - 2 * POISSONS_RATIO)),
