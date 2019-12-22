@@ -18,14 +18,14 @@ void InitSimulator(Simulator* sim, GLint grainsNum) {
 
 
 	for (i = 0; i < grainsNum; i++) {
-		glm::vec2 randPos = glm::clamp(glm::gaussRand(glm::vec2(0, 0), glm::vec2(0.3, 0.3)), -1.0f, 1.0f);
+		glm::vec2 randPos = glm::clamp(glm::gaussRand(glm::vec2(0, -0.5), glm::vec2(0.4, 0.4)), -0.9f, 0.9f);
 		glm::vec2 randVel = glm::gaussRand(glm::vec2(0, 0), glm::vec2(1, 1));
 		//glm::vec2 randVel = glm::vec2(0, 1);
-		InitGrain(sim->grains + i, randPos, randVel, 1, 0.01f, MU);
+		InitGrain(sim->grains + i, randPos, randVel, 1.0f, 0.1f, MU);
 	}
 
 	InitGrid(&sim->grid, sim->grains, grainsNum,
-		glm::vec2(-1, -1), glm::vec2(2, 2), glm::vec2(256, 256));
+		glm::vec2(-1, -1), glm::vec2(2, 2), glm::vec2(128, 128));
 	RasterizeMassAndMomentum(&sim->grid);
 
 	int GridNum = sim->grid.size[0] * sim->grid.size[1];
@@ -83,6 +83,7 @@ void SimUpdate(Simulator* sim) {
 	UpdateVelocitesAtPoint(&sim->grid);
 	UpdatePositionsAtPoint(&sim->grid);
 
+
 	for (i = 0; i < sim->grainsNum; i++) {
 		// ¸üÐÂ×´Ì¬
 		cur = sim->grains + i;
@@ -92,7 +93,7 @@ void SimUpdate(Simulator* sim) {
 			sim->grainsPos[i * GRAINS_DIM + j] = sim->grains[i].pos[j];
 		sim->grainsColor[i * 3 + 0] = 0.5f;
 		sim->grainsColor[i * 3 + 1] = 1;
-		sim->grainsColor[i * 3 + 2] = glm::length(sim->grains[i].velocity) / 10.0f;
+		sim->grainsColor[i * 3 + 2] = glm::length(sim->grains[i].velocity) / 50.0f;
 	}
 
 	for (i = 0; i < sim->grid.size[0]; i++) {

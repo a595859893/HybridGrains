@@ -20,8 +20,8 @@
 #include "Simulator.h"
 #include "Constant.h"
 
-#define WINDOWS_HEIGHT 800
-#define WINDOWS_WIDTH 800
+#define WINDOWS_HEIGHT 500
+#define WINDOWS_WIDTH 500
 
 void Cleanup();
 
@@ -219,7 +219,7 @@ int main(int argc, char* argv[])
 {
 	// 初始化窗口和模型相关数据
 	Initialize(argc, argv);
-	InitSimulator(&sim, 100);
+	InitSimulator(&sim, 1000);
 	InitShaders();
 	InitBuffer();
 

@@ -13,26 +13,10 @@ static const GLint GRAINS_DIM = 2;
 static const GLint BSPLINE_RADIUS = 2;
 
 static const GLfloat
-PARTICLE_DIAM = .005f,		//Diameter of each particle; smaller = higher resolution
-MAX_TIMESTEP = 5e-3f,		//Upper timestep limit
-FLIP_PERCENT = .95f,			//Weight to give FLIP update over PIC (.95)
-CRIT_COMPRESS = 1 - 1.9e-2f,	//Fracture threshold for compression (1-2.5e-2)
-CRIT_STRETCH = 1 + 7.5e-3f,	//Fracture threshold for stretching (1+7.5e-3)
-HARDENING = 10.0f,			//How much plastic deformation strengthens material (10)
-DENSITY = 100,				//Density of snow in kg/m^2 (400 for 3d)
-YOUNGS_MODULUS = 1.5e5f,		//Young's modulus (springiness) (1.4e5)
-POISSONS_RATIO = .2f,		//Poisson's ratio (transverse/axial strain ratio) (.2)
-IMPLICIT_RATIO = 0,			//Percentage that should be implicit vs explicit for velocity update
-MAX_IMPLICIT_ITERS = 30,	//Maximum iterations for the conjugate residual
-MAX_IMPLICIT_ERR = 1e3f,		//Maximum allowed error for conjugate residual
-MIN_IMPLICIT_ERR = 1e-3f,	//Minimum allowed error for conjugate residual
-STICKY = .5f,				//Collision stickiness (lower = stickier)
-TIMESTEP = 1e-3f,
+STICKY = .8f,				//Collision stickiness (lower = stickier)
+TIMESTEP = 3e-3f,
 BSPLINE_EPSILON = 1e-3f,
-KAPPA = 0.01f,
-ALPHA = 0.2f,
-BETA = 0.8;
-
-static const GLfloat
-LAMBDA = YOUNGS_MODULUS * POISSONS_RATIO / ((1 + POISSONS_RATIO) * (1 - 2 * POISSONS_RATIO)),
-MU = YOUNGS_MODULUS / (2 + 2 * POISSONS_RATIO);
+KAPPA = 0.0001f,
+ALPHA = 0.10f,
+BETA = 0.4,//越低越倾向于聚在一起
+MU = 0.99;

@@ -7,8 +7,9 @@ void InitGrain(Grain* grain, glm::vec2 pos, glm::vec2 velocity, GLfloat mass, GL
 	grain->vol = vol;
 	grain->mass = mass;
 	grain->mu = mu;
-	grain->J = 1;
-	grain->be = glm::mat2x2(0);
+
+	grain->J = 0.5;
+	grain->be = glm::mat2x2(1);
 }
 
 
@@ -90,7 +91,6 @@ void ComputeStressAtPoint(Grid* grid) {
 		Grain* grain = grid->grains + i;
 		glm::mat2x2 tau(0);
 		if (grain->J <= 1) {
-			// TOOD KAPPA,J,be
 			tau = 0.5f * KAPPA * (grain->J * grain->J - 1) * glm::mat2x2(1) + \
 				grain->mu * 0.5f * (grain->be - 0.5f * (grain->be[0][0] * grain->be[1][1]) * glm::mat2x2(1));
 		}
@@ -101,7 +101,6 @@ void ComputeStressAtPoint(Grid* grid) {
 // 更新网格受力情况
 void ComputeForceOnGrid(Grid* grid, glm::vec2 gravity) {
 	// 计算每个粒子的受力情况
-	// 将即将更新的速度存在vNew里
 	for (int i = 0; i < grid->grainNum; i++) {
 		Grain* grain = grid->grains + i;
 
@@ -125,8 +124,6 @@ void ComputeForceOnGrid(Grid* grid, glm::vec2 gravity) {
 			node->f += node->mass * gravity;
 	}
 
-	// 撞上边界的检测
-	collisionGrid(grid);
 }
 // 更新网格的动量
 void UpdateMomentumOnGrid(Grid* grid) {
@@ -138,6 +135,9 @@ void UpdateMomentumOnGrid(Grid* grid) {
 			}
 		}
 	}
+
+	// 撞上边界的检测
+	collisionGrid(grid);
 }
 
 // 网格质量和速度的更新

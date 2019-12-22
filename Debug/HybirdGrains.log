@@ -1,6 +1,7 @@
 ﻿  Grid.cpp
-D:\Project\CPP\HybirdGrains\Constant.h(34,11): warning C4305: “初始化”: 从“double”到“GLfloat”截断
-D:\Project\CPP\HybirdGrains\Grid.cpp(46,23): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+D:\Project\CPP\HybirdGrains\Constant.h(21,11): warning C4305: “初始化”: 从“double”到“GLfloat”截断
+D:\Project\CPP\HybirdGrains\Constant.h(22,10): warning C4305: “初始化”: 从“double”到“GLfloat”截断
+D:\Project\CPP\HybirdGrains\Grid.cpp(47,23): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
 D:\Project\CPP\HybirdGrains\Grid.cpp(164,23): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
 D:\Project\CPP\HybirdGrains\Grid.cpp(199,26): warning C4244: “初始化”: 从“double”转换到“GLfloat”，可能丢失数据
 D:\Project\CPP\HybirdGrains\Grid.cpp(225,23): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
